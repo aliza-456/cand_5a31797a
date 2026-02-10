@@ -1,15 +1,16 @@
-def bow_transform(corpus, vocab):
-    vocab_index = {word: i for i, word in enumerate(vocab)}
-    result = []
+import math
+from collections import Counter
 
-    for doc in corpus:
-        counts = [0] * len(vocab)
-        tokens = doc.split()
+def entropy(y):
+    if len(set(y)) == 1:
+        return 0.0
 
-        for token in tokens:
-            if token in vocab_index:
-                counts[vocab_index[token]] += 1
+    total = len(y)
+    counts = Counter(y)
+    ent = 0.0
 
-        result.append(counts)
+    for cnt in counts.values():
+        p = cnt / total
+        ent -= p * math.log2(p)
 
-    return result
+    return round(ent, 4)
