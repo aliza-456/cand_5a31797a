@@ -1,22 +1,18 @@
-def minmax_scale(X):
-    if not X:
-        return []
+import math
 
-    rows = len(X)
-    cols = len(X[0])
-    result = [[0.0] * cols for _ in range(rows)]
+def kmeans_assign(points, centroids):
+    assignments = []
 
-    for j in range(cols):
-        column = [X[i][j] for i in range(rows)]
-        min_j = min(column)
-        max_j = max(column)
+    for p in points:
+        best_idx = 0
+        best_dist = float("inf")
 
-        if max_j == min_j:
-            for i in range(rows):
-                result[i][j] = 0.0
-        else:
-            for i in range(rows):
-                value = (X[i][j] - min_j) / (max_j - min_j)
-                result[i][j] = round(value, 4)
+        for i, c in enumerate(centroids):
+            dist = math.sqrt(sum((pi - ci) ** 2 for pi, ci in zip(p, c)))
+            if dist < best_dist or (dist == best_dist and i < best_idx):
+                best_dist = dist
+                best_idx = i
 
-    return result
+        assignments.append(best_idx)
+
+    return assignments
